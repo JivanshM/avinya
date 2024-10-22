@@ -548,7 +548,7 @@ button:hover {
     margin-bottom: 20px;
     font-size: 28px;
     font-weight: bold;
-    color: #333;
+    color: #f0ebeb;
     width: 100%;
 }
 .card-container {
@@ -638,4 +638,30 @@ button:hover {
 }
 
 
-  
+
+.marquee-container {
+    width: 100%;
+    overflow: hidden;
+    background-color:rgba(0, 0, 0, 0.7);
+}
+
+.marquee {
+    display: flex;
+    animation: scroll 10s linear infinite;
+}
+
+.marquee img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 10px;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
