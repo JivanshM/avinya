@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Blog</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background: #007BFF;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0 0 20px;
+        }
+        .blog-post {
+            margin-bottom: 40px;
+        }
+        .blog-post h2 {
+            color: #333;
+        }
+        .blog-post p {
+            line-height: 1.6;
+        }
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #007BFF;
+            color: white;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome to My Blog</h1>
+    </header>
+
+    <div class="container">
+        <div class="blog-post">
+            <h2>Sample Blog Post Title</h2>
+            <p><strong>Published on:</strong> October 1, 2023</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            <p>Curabitur pretium tincidunt lacus. Nulla gravida orci a odio, et viverra enim. Maecenas fermentum consequat mi. Donec fermentum. Pellentesque malesuada nulla a mi. Duis sapien sem, aliquet nec, commodo eget, consequat quis, neque. Aliquam faucibus, elit ut dictum aliquet, felis nisl adipiscing sapien, sed malesuada diam lacus eget erat.</p>
+        </div>
+
+        <div class="blog-post">
+            <h2>Another Sample Blog Post</h2>
+            <p><strong>Published on:</strong> October 2, 2023</p>
+            <p>Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Donec lacinia congue felis in faucibus. Ut at dolor quis odio consequat varius. Quisque malesuada placerat nisl. In hac habitasse platea dictumst. Aenean faucibus nibh et justo cursus id rutrum lorem imperdiet.</p>
+            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.</p>
+        </div>
+    </div>
+
+    <div>
+        <button id="theme-toggle">Toggle Theme</button>
+    <select id="sort-comments">
+        <option value="recent">Most Recent</option>
+        <option value="liked">Most Liked</option>
+    </select>
+    <div id="comments-container">
+        <!-- Comments will be appended here -->
+    </div>
+    <input type="text" id="comment-input" placeholder="Add a comment">
+    <button id="submit-comment">Submit</button>
+
+    <script>
+        // JavaScript functions
+        let comments = [];
+
+        document.getElementById('submit-comment').addEventListener('click', function() {
+            const commentInput = document.getElementById('comment-input');
+            const commentText = commentInput.value.trim();
+
+            if (commentText === '') {
+                alert('Comment cannot be empty!');
+                return;
+            }
+
+            const timestamp = Date.now();
+            const newComment = {
+                id: timestamp,
+                text: commentText,
+                likes: 0,
+                timestamp: timestamp
+            };
+
+            comments.push(newComment);
+            commentInput.value = '';
+            renderComments();
+        });
+
+        function renderComments() {
+            const commentsContainer = document.getElementById('comments-container');
+            commentsContainer.innerHTML = '';
+
+            comments.forEach(comment => {
+                const commentDiv = document.createElement('div');
+                commentDiv.className = 'comment';
+                commentDiv.dataset.commentId = comment.id;
+                commentDiv.dataset.likes = comment.likes;
+                commentDiv.dataset.timestamp = comment.timestamp;
+
+                commentDiv.innerHTML = `
+                    <p class="comment-text">${comment.text}</p>
+                    <button class="edit-button">Edit</button>
+                    <button class="delete-button">Delete</button>
+                    <span> Likes: <span class="like-count">${comment.likes}</span></span>
+                    <button class="like-button">Like</button>
+                `;
+
+                commentsContainer.appendChild(commentDiv);
+
+                commentDiv.querySelector('.edit-button').addEventListener('click', function() {
+                    const newText = prompt("Edit your comment:", comment.text);
+                    if (newText) {
+                        comment.text = newText;
+                        renderComments();
+                    }
+                });
+
+                commentDiv.querySelector('.delete-button').addEventListener('click', function() {
+                    comments = comments.filter(c => c.id !== comment.id);
+                    renderComments();
+                });
+
+                commentDiv.querySelector('.like-button').addEventListener('click', function() {
+                    comment.likes++;
+                    renderComments();
+                });
+            });
+        }
+
+        document.getElementById('sort-comments').addEventListener('change', function() {
+            const sortBy = this.value;
+
+            if (sortBy === 'recent') {
+                comments.sort((a, b) => b.timestamp - a.timestamp);
+            } else if (sortBy === 'liked') {
+                comments.sort((a, b) => b.likes - a.likes);
+            }
+
+            renderComments();
+        });
+
+        const themeToggle = document.getElementById('theme-toggle');
+        themeToggle.addEventListener('click', function() {
+            document.body.classList.toggle('dark-theme');
+        });
+    </script>
+    </div>
+</body>
+</html>
